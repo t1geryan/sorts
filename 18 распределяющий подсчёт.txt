@@ -1,0 +1,17 @@
+int * distributive_counting_sort(int* array, size_t n) 
+{
+	size_t sizeC = max - min + 1;
+	size_t* C = new size_t[max - min + 1]{ 0 } ; // заполняем массив C нулями
+	for (size_t i = 0; i < n; ++i) 
+		++C[array[i]]; // записываем в массив C количество каждого элемента из исходного массива
+	for (size_t i = 1; i < sizeC; ++i)
+		C[i] += C[i - 1]; // считаем частичные суммы
+	int* result = new int[n];
+	for (int i = n-1; i >= 0; --i) { // записываем в выходной массив результат
+		result[C[array[i]]-1] = array[i];
+		--C[array[i]];
+	}
+
+	return result;
+	delete[] C;
+}

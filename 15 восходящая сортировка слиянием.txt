@@ -1,0 +1,84 @@
+#include<iostream>
+#include<Windows.h>
+
+
+void Print(int* arr, int n) 
+{ 
+	for (int i = 0; i < n; i++) 
+		std::cout << arr[i] << ' '; 
+	std::cout << std::endl; 
+}
+
+
+// Слияние arr[left..middle] с arr[middle+1..right] 
+void Merge(int* arr, int* tmp, int left, int middle, int right)
+{ 
+	// Заполнение копии исходного массива
+	for (int k = left; k <= right; k++) 
+		tmp[k] = arr[k];  
+
+	// Индекс начала левой части исходного массива
+	int i = left;
+	// Индекс начала правой части исходного массива
+	int j = middle + 1;
+	// Индекс начала результирующего массива
+	int k = left;
+	// Заполнение результирующего массива
+	while (k <= right)
+		if (i > middle) // левая половина закончилась, теперь просто копируем элементы из второй половины 
+			arr[k++] = tmp[j++];
+		else if (j > right) // правая половина закончилась,теперь просто копируем элементы из первой половины 
+			arr[k++] = tmp[i++];
+		else if (tmp[i] < tmp[j])  // копируем меньший из пары
+			arr[k++] = tmp[i++];
+		else 
+			arr[k++] = tmp[j++];
+}
+
+
+void MergeSortUp(int* arr, int size)
+{
+	int* tmp = new int[size];// Временный массив, для создания копии в Merge
+	int length = 1;// Размер упорядоченных подмассивов
+	int left;// Индекс начала соответствующего фрагмента массива
+	while (length < size)
+	{
+		left = 0;
+		while (left < size - length)// Слияние подмассивов длины length
+		{
+			Merge
+			(
+				arr, 
+				tmp, 
+				left, // Индекс первого элемента левого подмассива
+				left + length - 1, // Индекс крайнего элемента левого подмассива
+				min
+				(
+					left + 2 * length - 1, // Индекс крайнего элемента правого подмассива
+					size - 1 // Индекс крайнего элемента всего массива
+				)
+			);
+			left += 2 * length;
+		}
+		length *= 2;
+	}
+	delete[] tmp;
+}
+		
+int main()
+{
+	const int n = 10;
+	int arr[n]; 
+	srand(GetTickCount64());
+	// Заполнение массива случайным образом 
+	for (int i = 0; i < n; i++) 
+		arr[i] = rand() % 100; 
+	// Печать исходного массива 
+	Print(arr, n); 
+	// Сортировка 
+	MergeSortUp(arr, n); 
+	// Печать упорядоченного массива
+	Print(arr, n);
+	std::cin.get();
+	return 0;
+}
